@@ -1,5 +1,7 @@
 package com.challenge.guestparcelservice.representation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -11,11 +13,17 @@ import java.util.Date;
 public class ParcelAcceptRequest {
 
     @NotNull
+    @JsonProperty("GuestId")
     private String gustId ;
+    @JsonProperty("CollectedDate")
     private Date collectedDate;
+    @JsonProperty("AcceptedDate")
     private Date acceptedDate;
+    @JsonProperty("CollectedBy")
     private String collectedBy;
+    @JsonProperty("IsParcelAccepted")
     private boolean IsParcelAccepted;
+    @JsonProperty("isParcelCollected")
     private boolean isParcelCollected;
 
     public String getGustId() {

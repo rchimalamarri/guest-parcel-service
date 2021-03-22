@@ -1,5 +1,7 @@
 package com.challenge.guestparcelservice.representation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 /***********************************
@@ -9,6 +11,9 @@ import java.util.List;
  ************************************/
 public class GuestInfoResponse {
 
+    @JsonProperty("GuestDetailsList")
+    private List<GuestDetails> GuestDetailsList = new ArrayList<>();
+
     public List<GuestDetails> getGuestDetailsList() {
         return GuestDetailsList;
     }
@@ -17,5 +22,5 @@ public class GuestInfoResponse {
         GuestDetailsList = guestDetailsList;
     }
 
-    private  List<GuestDetails> GuestDetailsList = new ArrayList<>();
+
 }
