@@ -16,8 +16,10 @@ public class GuestInfo {
     @Column(name ="GUEST_ID", length = 36)
     private String guestId;
     @Column(name ="GUEST_FIRST_NAME", length = 20)
+    @NotNull
     private String firstName;
     @Column(name ="GUEST_LAST_NAME", length = 20)
+    @NotNull
     private String lastName;
     @Column(name ="GUEST_CHECK_IN_TS")
     @Temporal(TemporalType.DATE)
