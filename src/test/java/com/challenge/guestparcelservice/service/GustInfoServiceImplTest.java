@@ -1,15 +1,21 @@
 package com.challenge.guestparcelservice.service;
 
 import com.challenge.guestparcelservice.entity.GuestInfo;
+import com.challenge.guestparcelservice.entity.ParcelInfo;
 import com.challenge.guestparcelservice.exception.GuestParcelException;
 import com.challenge.guestparcelservice.repository.GuestRepository;
+import com.challenge.guestparcelservice.repository.ParcelRepository;
 import com.challenge.guestparcelservice.representation.GuestDetails;
 import com.challenge.guestparcelservice.representation.GuestInfoResponse;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -20,6 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 /***********************************
  * @author Raghu Vamsi Chimalamarri (rchimalamarri@gmail.com)
@@ -32,6 +39,10 @@ public class GustInfoServiceImplTest {
     @Mock
     GuestRepository guestRepository;
 
+
+    @Mock
+    ParcelRepository parcelRepository;
+
     @Mock
     GuestInfoService guestInfoService;
 
@@ -43,15 +54,20 @@ public class GustInfoServiceImplTest {
     @InjectMocks
     GuestInfoServiceImpl guestInfoServiceImpl;
 
+
     @Test
-    public void testPostGuestCheckin() throws GuestParcelException {
+    public void testPostGuestCheckin() throws ParseException {
+        ParcelInfo parcelInfo =getParcelInfo();
+        lenient().when(parcelRepository.findByGuestId(any())).thenReturn(parcelInfo);
         guestInfoServiceImpl.postGuestCheckIn(getGuestDetails());
     }
 
     @Test
     public void testUpdateGuestCheckout() throws GuestParcelException, ParseException {
         GuestInfo guestInfo = getGuestInfo();
+        ParcelInfo parcelInfo =getParcelInfo();
         when(guestRepository.findByGuestId(any())).thenReturn(guestInfo);
+        when(parcelRepository.findByGuestId(any())).thenReturn(parcelInfo);
         guestInfoServiceImpl.updateGuestCheckout("f180b8e3-1d2b-4eef-8b3d-6379116c6888");
     }
 
@@ -73,7 +89,7 @@ public class GustInfoServiceImplTest {
         GuestDetails guestDetails = new GuestDetails();
         guestDetails.setFirstName("TestFirstName");
         guestDetails.setLastName("TestLastName");
-        guestDetails.setEligibleToCollectParcel(true);
+        guestDetails.setParcelCollectionEligibility(true);
         return guestDetails;
     }
 
@@ -106,5 +122,13 @@ public class GustInfoServiceImplTest {
         guest.setCheckInDateTime(parseDate);
         guest.setEligibleToCollectParcel(true);
         return guest;
+    }
+    private ParcelInfo getParcelInfo() throws ParseException {
+        ParcelInfo parcelInfo = new ParcelInfo();
+        Date parseDate = new SimpleDateFormat("yyyy-MM-dd").parse("2021-03-20");
+        parcelInfo.setAcceptedDate(parseDate);
+        parcelInfo.setGustId("f180b8e3-1d2b-4eef-8b3d-6379116c6888");
+        parcelInfo.setParcelAccepted(false);
+        return parcelInfo;
     }
 }

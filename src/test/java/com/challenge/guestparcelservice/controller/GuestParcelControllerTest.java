@@ -1,6 +1,7 @@
 package com.challenge.guestparcelservice.controller;
 
 import com.challenge.guestparcelservice.exception.GuestParcelException;
+import com.challenge.guestparcelservice.representation.GuestCheckOutRequest;
 import com.challenge.guestparcelservice.representation.GuestDetails;
 import com.challenge.guestparcelservice.representation.GuestInfoResponse;
 import com.challenge.guestparcelservice.representation.ParcelAcceptRequest;
@@ -61,15 +62,15 @@ class GuestParcelControllerTest {
     }
 
     @Test
-    public void createGuestCheckOut() {
-        Response response = guestParcelController.createGuestCheckout(getGuestDetails());
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+    public void testGuestCheckOut() {
+        Response response = guestParcelController.createGuestCheckout(getCheckOutDetails());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    public void createGuestCheckOutError() throws GuestParcelException {
+    public void testGuestCheckOutError() throws GuestParcelException {
         doThrow(GuestParcelException.class).when(guestInfoService).updateGuestCheckout("f4166d5e-318b-40f9-a43d-0fcbadaa5296");
-        Response response = guestParcelController.createGuestCheckout(getGuestDetails());
+        Response response = guestParcelController.createGuestCheckout(getCheckOutDetails());
         assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
@@ -95,13 +96,13 @@ class GuestParcelControllerTest {
     }
 
     @Test
-    public void postParcelAccept() {
+    public void testParcelAccept() {
         Response response = guestParcelController.createParcelAccept(getParcelDetails());
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    public void postParcelAcceptError() throws GuestParcelException {
+    public void testParcelAcceptError() throws GuestParcelException {
         doThrow(GuestParcelException.class).when(parcelInfoService).postParcelInfo(getParcelDetails());
         Response response = guestParcelController.createParcelAccept(getParcelDetails());
         assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -112,7 +113,7 @@ class GuestParcelControllerTest {
         GuestDetails guestDetails = new GuestDetails();
         guestDetails.setFirstName("TestFirstName");
         guestDetails.setLastName("TestLastName");
-        guestDetails.setEligibleToCollectParcel(true);
+        guestDetails.setParcelCollectionEligibility(true);
         return guestDetails;
     }
 
@@ -121,5 +122,11 @@ class GuestParcelControllerTest {
         parcelAcceptRequest.setGustId("f180b8e3-1d2b-4eef-8b3d-6379116c6888");
         parcelAcceptRequest.setParcelAccepted(true);
         return parcelAcceptRequest;
+    }
+
+    private GuestCheckOutRequest getCheckOutDetails() {
+        GuestCheckOutRequest checkOutRequest = new GuestCheckOutRequest();
+        checkOutRequest.setGuestId("f180b8e3-1d2b-4eef-8b3d-6379116c6888");
+        return checkOutRequest;
     }
 }

@@ -1,8 +1,10 @@
 package com.challenge.guestparcelservice.service;
 
 import com.challenge.guestparcelservice.entity.GuestInfo;
+import com.challenge.guestparcelservice.entity.ParcelInfo;
 import com.challenge.guestparcelservice.exception.GuestParcelException;
 import com.challenge.guestparcelservice.repository.GuestRepository;
+import com.challenge.guestparcelservice.repository.ParcelRepository;
 import com.challenge.guestparcelservice.representation.GuestCheckInResponse;
 import com.challenge.guestparcelservice.representation.GuestCheckOutResponse;
 import com.challenge.guestparcelservice.representation.GuestDetails;
@@ -33,6 +35,8 @@ public class GuestInfoServiceImpl implements GuestInfoService {
     private static final Logger logger = LoggerFactory.getLogger(GuestInfoServiceImpl.class);
     @Autowired
     GuestRepository guestRepository;
+    @Autowired
+    ParcelRepository parcelRepository;
 
     /*************************
      * This method will handle the service logic for fetching the
@@ -67,7 +71,7 @@ public class GuestInfoServiceImpl implements GuestInfoService {
         guestDetails.setFirstName(guestInfo.getFirstName());
         guestDetails.setLastName(guestInfo.getLastName());
         guestDetails.setCheckInDateTime(guestInfo.getCheckInDateTime());
-        guestDetails.setEligibleToCollectParcel(guestInfo.isEligibleToCollectParcel());
+        guestDetails.setParcelCollectionEligibility(guestInfo.isEligibleToCollectParcel());
         return guestDetails;
 
     }
@@ -81,11 +85,16 @@ public class GuestInfoServiceImpl implements GuestInfoService {
     @Override
     public GuestCheckInResponse postGuestCheckIn(GuestDetails guestDetails) {
         GuestInfo guestInfo = new GuestInfo();
-        guestInfo.setGuestId(UUID.randomUUID().toString());
+        String uuid = UUID.randomUUID().toString();
+        guestInfo.setGuestId(uuid);
         guestInfo.setCheckInDateTime(new Date());
         guestInfo.setEligibleToCollectParcel(true);
         guestInfo.setFirstName(guestDetails.getFirstName());
         guestInfo.setLastName(guestDetails.getLastName());
+        ParcelInfo parcelInfo = new ParcelInfo();
+        parcelInfo.setGustId(uuid);
+        parcelInfo.setParcelAccepted(false);
+        parcelRepository.save(parcelInfo);
         guestRepository.save(guestInfo);
         GuestCheckInResponse response = new GuestCheckInResponse();
         response.setGuestCheckInResponse("CHECK IN COMPLETED SUCCESSFULLY");
@@ -93,7 +102,7 @@ public class GuestInfoServiceImpl implements GuestInfoService {
     }
 
     /******************************
-     * his method will handle the service logic for post Guest CheckIn
+     * his method will handle the service logic for post Guest Checkout
      * @param guestId guestId
      * @return GuestCheckOutResponse
      * @throws GuestParcelException guestParcelException
@@ -105,13 +114,19 @@ public class GuestInfoServiceImpl implements GuestInfoService {
             guestInfo.setCheckOutDateTime(new Date());
             guestInfo.setEligibleToCollectParcel(false);
             guestInfo.setCheckOutDateTime(new Date());
-            guestRepository.saveAndFlush(guestInfo);
+            guestRepository.save(guestInfo);
         } catch (EntityNotFoundException e) {
             logger.info("InValid GuestId");
             throw new GuestParcelException("Exception occurred while check out");
         }
 
         GuestCheckOutResponse guestCheckOutResponse = new GuestCheckOutResponse();
+        ParcelInfo parcelInfo = parcelRepository.findByGuestId(guestId);
+        if (parcelInfo.isParcelAccepted()) {
+            guestCheckOutResponse.setParcelNotification("Reminder ! Guest have left over Parcel ,Please remind to collect before they leave");
+        } else {
+            guestCheckOutResponse.setParcelNotification("Guest have no left over Parcel");
+        }
         guestCheckOutResponse.setCheckoutResponse("Guest Checkout has been completed");
         return guestCheckOutResponse;
     }

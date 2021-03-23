@@ -21,9 +21,10 @@ public class GuestDetails {
     private String lastName;
     @JsonProperty("CheckInDateAndTime")
     private Date checkInDateTime;
+
     @JsonProperty("ParcelCollectionEligibility")
     @NotNull
-    private boolean isEligibleToCollectParcel;
+    private boolean parcelCollectionEligibility;
 
     public String getGuestId() {
         return guestId;
@@ -57,11 +58,11 @@ public class GuestDetails {
         this.checkInDateTime = checkInDateTime;
     }
 
-    public boolean isEligibleToCollectParcel() {
-        return isEligibleToCollectParcel;
+    public boolean isParcelCollectionEligibility() {
+        return parcelCollectionEligibility;
     }
 
-    public void setEligibleToCollectParcel(boolean eligibleToCollectParcel) {
-        isEligibleToCollectParcel = eligibleToCollectParcel;
+    public void setParcelCollectionEligibility(boolean parcelCollectionEligibility) {
+        this.parcelCollectionEligibility = parcelCollectionEligibility;
     }
 }

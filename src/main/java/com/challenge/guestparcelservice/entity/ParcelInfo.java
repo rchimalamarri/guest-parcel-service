@@ -7,15 +7,13 @@ import java.util.Date;
  * @version  1.0
  * @since 20-MAR-2021
  ************************************/
-@Table
 @Entity
+@Table(name ="Parcel_Info")
 public class ParcelInfo {
 
     @Id
-    @Column(name ="PARCEL_ID", length = 36)
-    private String parcelId ;
     @Column(name ="GUEST_ID", length = 36)
-    private String gustId ;
+    private String guestId ;
     @Column(name ="PARCEL_COLLECTED_TS")
     private Date collectedDate;
     @Column(name ="PARCEL_ACCEPTED_TS")
@@ -27,12 +25,17 @@ public class ParcelInfo {
     @Column(name ="PARCEL_COLLECTED")
     private boolean isParcelCollected;
 
+
+
+    public ParcelInfo() {
+    }
+
     public String getGustId() {
-        return gustId;
+        return guestId;
     }
 
     public void setGustId(String gustId) {
-        this.gustId = gustId;
+        this.guestId = gustId;
     }
 
     public Date getCollectedDate() {
@@ -75,11 +78,5 @@ public class ParcelInfo {
         isParcelCollected = parcelCollected;
     }
 
-    public String getParcelId() {
-        return parcelId;
-    }
 
-    public void setParcelId(String parcelId) {
-        this.parcelId = parcelId;
-    }
 }

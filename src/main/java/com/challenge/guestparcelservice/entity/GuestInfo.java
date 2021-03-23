@@ -2,24 +2,22 @@ package com.challenge.guestparcelservice.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.soap.Name;
 import java.util.Date;
 /***********************************
  * @author Raghu Vamsi Chimalamarri (rchimalamarri@gmail.com)
  * @version  1.0
  * @since 20-MAR-2021
  ************************************/
-
-@Table
 @Entity
+@Table(name="Guest_Info")
 public class GuestInfo {
     @Id
     @Column(name ="GUEST_ID", length = 36)
     private String guestId;
     @Column(name ="GUEST_FIRST_NAME", length = 20)
-    @NotNull
     private String firstName;
     @Column(name ="GUEST_LAST_NAME", length = 20)
-    @NotNull
     private String lastName;
     @Column(name ="GUEST_CHECK_IN_TS")
     @Temporal(TemporalType.DATE)
@@ -31,12 +29,7 @@ public class GuestInfo {
     @NotNull
     private boolean isEligibleToCollectParcel;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "GUEST_ID")
-    private ParcelInfo parcelInfo;
 
-    public GuestInfo() {
-    }
 
     public String getGuestId() {
         return guestId;

@@ -67,11 +67,11 @@ public class GuestParcelController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createGuestCheckout(
-            @RequestBody GuestDetails requestBody) {
+            @RequestBody GuestCheckOutRequest requestBody) {
 
         try {
             GuestCheckOutResponse guestCheckOutResponse = guestInfoService.updateGuestCheckout(requestBody.getGuestId());
-            return Response.status(Response.Status.CREATED).entity(guestCheckOutResponse).build();
+            return Response.status(Response.Status.OK).entity(guestCheckOutResponse).build();
         } catch (GuestParcelException e) {
             logger.info("Error occured in check out process Due to the  Guest data ");
             return badRequest();
@@ -99,7 +99,7 @@ public class GuestParcelController {
         }
     }
 
-    @POST
+    @PUT
     @Path("/parcel/accept")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ public class GuestParcelController {
 
         try {
             ParcelAcceptResponse parcelAcceptResponse = parcelInfoService.postParcelInfo(requestBody);
-            return Response.status(Response.Status.CREATED).entity(parcelAcceptResponse).build();
+            return Response.status(Response.Status.OK).entity(parcelAcceptResponse).build();
         } catch (GuestParcelException e) {
             logger.info("Error occured in check in process Due to the  Guest data ");
             return badRequest();
